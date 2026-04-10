@@ -19,6 +19,7 @@ export default function Home() {
     correctCount,
     totalTyped,
     wpmHistory,
+    incorrectKeys,
     reset,
     nextPassage,
   } = useTypingTest();
@@ -70,6 +71,7 @@ export default function Home() {
           correctCount={correctCount}
           totalTyped={totalTyped}
           wpmHistory={wpmHistory}
+          incorrectKeys={incorrectKeys}
           onReset={reset}
           onNextPassage={nextPassage}
         />

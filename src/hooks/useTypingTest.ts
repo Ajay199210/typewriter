@@ -14,6 +14,7 @@ interface State {
   isStarted: boolean;
   isFinished: boolean;
   wpmHistory: WpmSnapshot[];
+  lastEma: number | null;
   incorrectKeys: Record<string, number>;
 }
 
@@ -35,6 +36,7 @@ function createInitialState(passage: string): State {
     isStarted: false,
     isFinished: false,
     wpmHistory: [],
+    lastEma: null,
     incorrectKeys: {},
   };
 }
@@ -82,11 +84,17 @@ function reducer(state: State, action: Action): State {
       if (!state.startTime || state.isFinished) return state;
       const elapsed = Math.floor((Date.now() - state.startTime) / 1000);
       const correctCount = state.typedChars.filter((s) => s === "correct").length;
-      const wpm = elapsed > 0 ? Math.round(correctCount / 5 / (elapsed / 60)) : 0;
+      const rawWpm = elapsed > 0 ? Math.round(correctCount / 5 / (elapsed / 60)) : 0;
+      const alpha = 0.4;
+      const ema =
+        state.lastEma === null
+          ? rawWpm
+          : Math.round(alpha * rawWpm + (1 - alpha) * state.lastEma);
       return {
         ...state,
         elapsedSeconds: elapsed,
-        wpmHistory: [...state.wpmHistory, { second: elapsed, wpm }],
+        lastEma: ema,
+        wpmHistory: [...state.wpmHistory, { second: elapsed, wpm: ema }],
       };
     }
     case "RESET":

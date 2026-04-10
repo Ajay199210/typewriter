@@ -1,7 +1,7 @@
 export const PASSAGES: string[] = [
   "The quick brown fox jumps over the lazy dog. This pangram contains every letter of the English alphabet at least once, making it a favorite for typing practice.",
   "In the middle of difficulty lies opportunity. The only way to do great work is to love what you do. Stay hungry, stay foolish, and never stop learning.",
-  "Code is like humor. When you have to explain it, it is bad. Programming is not about typing, it is about thinking. First, solve the problem, then write the code.",
-  "The best error message is the one that never shows up. Talk is cheap, show me the code. Simplicity is the soul of efficiency in everything we build.",
-  "Technology is best when it brings people together. The advance of technology is based on making it fit in so that you do not even notice it is there around you.",
+  "We do not see things as they are, we see them as we are. The real voyage of discovery consists not in seeking new landscapes, but in having new eyes. To dwell in the past is to lose the present; to worry about the future is to lose the peace of today.",
+  "Nature operates in a series of continuous loops called cycles. In the Water Cycle, the sun provides the energy needed to evaporate water from the sea into the sky. In the Oxygen Cycle, plants release the air we breathe while we provide the carbon dioxide they need to survive. Even the soil has a cycle; when leaves fall in the autumn, they rot and turn into nutrients for the forest floor. These basic systems ensure that nothing in the natural world is ever truly wasted, as every ending provides a new beginning for another living thing.",
+  "Take one cup of patience, two big spoons of humor, and a handful of \"it is what it is.\" Mix in a few good friends, a pinch of bad decisions (for flavor), and a generous splash of naps. Stir daily with gratitude, let it simmer through ups and downs, and don't forget to taste along the way, because perfection is overrated, but enjoying the process isn't"
 ];

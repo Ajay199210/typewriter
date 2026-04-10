@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect, useRef } from "react";
+import { useCompletion } from "@ai-sdk/react";
 import {
   AreaChart,
   Area,
@@ -19,6 +21,7 @@ interface TypingEndScreenProps {
   correctCount: number;
   totalTyped: number;
   wpmHistory: WpmSnapshot[];
+  incorrectKeys: Record<string, number>;
   onReset: () => void;
   onNextPassage: () => void;
 }
@@ -30,9 +33,22 @@ export function TypingEndScreen({
   correctCount,
   totalTyped,
   wpmHistory,
+  incorrectKeys,
   onReset,
   onNextPassage,
 }: TypingEndScreenProps) {
+  const { complete, completion, isLoading } = useCompletion({
+    api: "/api/suggestions",
+    body: { incorrectKeys },
+  });
+
+  const triggered = useRef(false);
+  useEffect(() => {
+    if (triggered.current) return;
+    triggered.current = true;
+    complete("");
+  }, [complete]);
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm">
       <div className="w-full max-w-2xl rounded-2xl border border-foreground/10 bg-background p-10 text-center shadow-2xl">
@@ -84,7 +100,7 @@ export function TypingEndScreen({
                   cursor={{ stroke: "var(--foreground)", strokeOpacity: 0.15 }}
                 />
                 <Area
-                  type="monotone"
+                  type="basis"
                   dataKey="wpm"
                   stroke="var(--foreground)"
                   strokeWidth={1.5}
@@ -97,6 +113,21 @@ export function TypingEndScreen({
             </ResponsiveContainer>
           </div>
         )}
+
+        <div className="mt-8 rounded-xl border border-foreground/10 bg-foreground/3 px-6 py-4 text-left">
+          <p className="mb-2 text-xs uppercase tracking-widest text-foreground/40">
+            AI Coach
+          </p>
+          {isLoading && !completion ? (
+            <p className="text-sm text-foreground/40 animate-pulse">Analyzing your session…</p>
+          ) : (
+            <ul className="space-y-2">
+              {completion.split("\n").filter(line => line.trim()).map((line, i) => (
+                <li key={i} className="text-sm leading-relaxed text-foreground/70">{line}</li>
+              ))}
+            </ul>
+          )}
+        </div>
 
         <div className="mt-8 flex justify-center gap-4">
           <button
