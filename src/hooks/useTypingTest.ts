@@ -1,7 +1,7 @@
 "use client";
 
 import { useReducer, useEffect, useState, useCallback } from "react";
-import type { CharStatus } from "@/types/typing";
+import type { CharStatus, WpmSnapshot } from "@/types/typing";
 import { PASSAGES } from "@/lib/passages";
 
 interface State {
@@ -13,6 +13,8 @@ interface State {
   elapsedSeconds: number;
   isStarted: boolean;
   isFinished: boolean;
+  wpmHistory: WpmSnapshot[];
+  incorrectKeys: Record<string, number>;
 }
 
 type Action =
@@ -32,6 +34,8 @@ function createInitialState(passage: string): State {
     elapsedSeconds: 0,
     isStarted: false,
     isFinished: false,
+    wpmHistory: [],
+    incorrectKeys: {},
   };
 }
 
@@ -46,6 +50,12 @@ function reducer(state: State, action: Action): State {
       newTypedChars[state.currentIndex] = isCorrect ? "correct" : "incorrect";
       const newIndex = state.currentIndex + 1;
       const finished = newIndex === state.currentText.length;
+      const newIncorrectKeys = isCorrect
+        ? state.incorrectKeys
+        : {
+          ...state.incorrectKeys,
+          [action.key]: (state.incorrectKeys[action.key] ?? 0) + 1,
+        };
       return {
         ...state,
         typedChars: newTypedChars,
@@ -54,6 +64,7 @@ function reducer(state: State, action: Action): State {
         isStarted: true,
         isFinished: finished,
         endTime: finished ? now : null,
+        incorrectKeys: newIncorrectKeys,
       };
     }
     case "BACKSPACE": {
@@ -70,7 +81,13 @@ function reducer(state: State, action: Action): State {
     case "TICK": {
       if (!state.startTime || state.isFinished) return state;
       const elapsed = Math.floor((Date.now() - state.startTime) / 1000);
-      return { ...state, elapsedSeconds: elapsed };
+      const correctCount = state.typedChars.filter((s) => s === "correct").length;
+      const wpm = elapsed > 0 ? Math.round(correctCount / 5 / (elapsed / 60)) : 0;
+      return {
+        ...state,
+        elapsedSeconds: elapsed,
+        wpmHistory: [...state.wpmHistory, { second: elapsed, wpm }],
+      };
     }
     case "RESET":
     case "NEXT_PASSAGE":
@@ -88,18 +105,23 @@ export function useTypingTest() {
     createInitialState
   );
 
-  // Derived values
-  const correctCount = state.typedChars.filter((s) => s === "correct").length;
-  const incorrectCount = state.typedChars.filter(
-    (s) => s === "incorrect"
-  ).length;
+  const { correctCount, incorrectCount } = state.typedChars.reduce(
+    (acc, s) => {
+      if (s === "correct") acc.correctCount++;
+      else if (s === "incorrect") acc.incorrectCount++;
+      return acc;
+    },
+    { correctCount: 0, incorrectCount: 0 }
+  );
   const totalTyped = correctCount + incorrectCount;
   const accuracy =
     totalTyped > 0 ? Math.round((correctCount / totalTyped) * 100) : 100;
+  const finalElapsed =
+    state.isFinished && state.endTime && state.startTime
+      ? (state.endTime - state.startTime) / 1000
+      : state.elapsedSeconds;
   const wpm =
-    state.elapsedSeconds > 0
-      ? Math.round(correctCount / 5 / (state.elapsedSeconds / 60))
-      : 0;
+    finalElapsed > 0 ? Math.round(correctCount / 5 / (finalElapsed / 60)) : 0;
   const progress = Math.round(
     (state.currentIndex / state.currentText.length) * 100
   );
@@ -170,6 +192,8 @@ export function useTypingTest() {
     correctCount,
     incorrectCount,
     totalTyped,
+    wpmHistory: state.wpmHistory,
+    incorrectKeys: state.incorrectKeys,
     reset,
     nextPassage,
   };

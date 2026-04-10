@@ -1,10 +1,9 @@
 "use client";
 
 import { useTypingTest } from "@/hooks/useTypingTest";
-import { Button } from "@/components/ui/Button";
-import { TypingArea } from "@/components/typing/TypingArea";
-import { TypingStats } from "@/components/typing/TypingStats";
-import { TypingEndScreen } from "@/components/typing/TypingEndScreen";
+import { TypingArea } from "@/components/TypingArea";
+import { TypingStats } from "@/components/TypingStats";
+import { TypingEndScreen } from "@/components/TypingEndScreen";
 
 export default function Home() {
   const {
@@ -19,6 +18,7 @@ export default function Home() {
     isFinished,
     correctCount,
     totalTyped,
+    wpmHistory,
     reset,
     nextPassage,
   } = useTypingTest();
@@ -54,12 +54,11 @@ export default function Home() {
           isFinished={isFinished}
         />
 
-        {/* Controls */}
         <div className="flex justify-center gap-4">
-          <Button variant="ghost" onClick={reset}>
+          <button className="cursor-pointer rounded-lg px-6 py-2.5 text-sm font-medium transition-colors border border-foreground/15 text-foreground/70 hover:bg-foreground/5 hover:text-foreground" onClick={reset}>
             Reset
-          </Button>
-          <Button onClick={nextPassage}>Next Passage</Button>
+          </button>
+          <button className="cursor-pointer rounded-lg px-6 py-2.5 text-sm font-medium transition-colors bg-foreground text-background hover:bg-foreground/85" onClick={nextPassage}>Next Passage</button>
         </div>
       </main>
 
@@ -70,6 +69,7 @@ export default function Home() {
           elapsedSeconds={elapsedSeconds}
           correctCount={correctCount}
           totalTyped={totalTyped}
+          wpmHistory={wpmHistory}
           onReset={reset}
           onNextPassage={nextPassage}
         />

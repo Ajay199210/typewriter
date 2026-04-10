@@ -15,7 +15,7 @@ export function TypingArea({
   isFinished,
 }: TypingAreaProps) {
   return (
-    <div className="rounded-xl border border-foreground/10 bg-foreground/[0.03] p-8 font-mono text-lg leading-relaxed tracking-wide select-none">
+    <div className="rounded-xl border border-foreground/10 bg-foreground/3 p-8 font-mono text-lg leading-relaxed tracking-wide select-none">
       {currentText.split("").map((char, index) => {
         const status = typedChars[index];
         const isCursor = index === currentIndex;
@@ -31,7 +31,7 @@ export function TypingArea({
             )}
           >
             {isCursor && !isFinished && (
-              <span className="absolute left-0 top-0 h-full w-[2px] -translate-x-[1px] bg-foreground animate-blink" />
+              <span className="absolute left-0 top-0 h-full w-0.5 -translate-x-px bg-foreground animate-blink" />
             )}
             {char}
           </span>
