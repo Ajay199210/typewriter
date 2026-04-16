@@ -1,36 +1,44 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Typewriter
+
+A typing speed test app with real-time WPM tracking, accuracy measurement, and an AI-powered coach.
+
+**[Live Demo](https://typewriter-test-app.vercel.app)**
+
+## Features
+
+- **Real-time stats** - live WPM, accuracy, and progress bar as you type
+- **Per-character feedback** - correct characters highlighted green, incorrect ones red, with a blinking cursor
+- **5 built-in passages** - cycle through different texts with the "Next" button
+- **End screen** - final stats grid (WPM, accuracy, time, correct/total) and a WPM-over-time area chart
+- **AI Coach** - after each session, Claude Haiku analyzes your most-missed keys and streams personalized improvement tips
+- **Dark/light mode** - follows system preference automatically
+
+## Tech Stack
+
+- [Next.js](https://nextjs.org) 16.1.6 · React 19.2.3 · TypeScript 5
+- [Tailwind CSS](https://tailwindcss.com) v4
+- [Recharts](https://recharts.org) 3 - WPM history chart
+- [Vercel AI SDK](https://sdk.vercel.ai) v6 + Claude Haiku - AI coaching
 
 ## Getting Started
 
-First, run the development server:
+Install dependencies and run the development server:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+pnpm install
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+> You can also use `npm run dev`, `yarn dev`, or `bun dev`.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Environment Variables
 
-## Learn More
+Create a `.env.local` file at the project root with your Anthropic API key to enable the AI Coach:
 
-To learn more about Next.js, take a look at the following resources:
+```
+ANTHROPIC_API_KEY=your_key_here
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Without this key the app works normally - the AI Coach panel simply won't appear.
