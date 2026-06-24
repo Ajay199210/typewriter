@@ -1,11 +1,18 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { useTypingTest } from "@/hooks/useTypingTest";
 import { TypingArea } from "@/components/TypingArea";
 import { TypingStats } from "@/components/TypingStats";
 import { TypingEndScreen } from "@/components/TypingEndScreen";
 
 export default function Home() {
+  const [isMobile, setIsMobile] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    setIsMobile(!window.matchMedia("(pointer: fine)").matches);
+  }, []);
+
   const {
     currentText,
     typedChars,
@@ -23,6 +30,17 @@ export default function Home() {
     reset,
     nextPassage,
   } = useTypingTest();
+
+  if (isMobile === null) return null;
+
+  if (isMobile) return (
+    <div className="flex h-dvh flex-col items-center justify-center bg-background px-8 font-sans text-center">
+      <h2 className="text-2xl font-bold tracking-tight text-foreground">Physical keyboard required</h2>
+      <p className="mt-3 max-w-xs text-sm text-foreground/50">
+        Typewriter measures real typing speed. Please open it on a device with a physical keyboard.
+      </p>
+    </div>
+  );
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-background px-4 py-8 font-sans">

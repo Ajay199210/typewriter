@@ -13,6 +13,10 @@ A typing speed test app with real-time WPM tracking, accuracy measurement, and a
 - **AI Coach** - after each session, Claude Haiku analyzes your most-missed keys and streams personalized improvement tips
 - **Dark/light mode** - follows system preference automatically
 
+## Device Support
+
+Designed for devices with a physical keyboard. Opening the app on a touchscreen-only device (phone, tablet) shows a message asking the user to switch to a keyboard device instead.
+
 ## Tech Stack
 
 - [Next.js](https://nextjs.org) 16.1.6 · React 19.2.3 · TypeScript 5
